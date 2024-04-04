@@ -9,14 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ag-grid-community/core": "^31.2.0",
+    "@ag-grid-community/styles": "^31.2.0",
+    "@ag-grid-enterprise/row-grouping": "^31.2.0",
+    "@ag-grid-enterprise/server-side-row-model": "^31.2.0",
+    "ag-grid-community": "^31.2.0",
+    "ag-grid-enterprise": "^31.2.0",
+    "ag-grid-react": "^31.2.0",
+    "next": "14.1.4",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.1.4"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
-    "@types/react-dom": "^18"
+    "@types/react-dom": "^18",
+    "typescript": "^5"
   }
 }
