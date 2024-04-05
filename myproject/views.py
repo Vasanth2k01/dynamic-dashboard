@@ -4,16 +4,32 @@ import pandas as pd
 
 from django.http import HttpResponse, JsonResponse
 
-def read_from_url(request):
-    if request.method == 'GET':
-        data = download_and_read_file(request=request)
-        return JsonResponse({'message': data}, status=201) #success response
-    return JsonResponse({'error': 'Method not allowed'}, status=405) #bad request method
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-def download_and_read_file(request):
-    # URL of the file
-    file_url = "https://firebasestorage.googleapis.com/v0/b/dynamic-dashboard-deaab.appspot.com/o/supermarket_sales%20-%20Sheet1.csv?alt=media&token=f30214f2-a68a-42e0-9610-291a52aeb5d9"
-    # file_url = "https://firebasestorage.googleapis.com/v0/b/dynamic-dashboard-deaab.appspot.com/o/supermarket_sales%20-%20Sheet1.xlsx?alt=media&token=4c8de51e-0465-483d-83df-faad44249402"
+@api_view(['POST'])
+def process_data(request):
+    if request.method == 'POST':
+        # Get the file URL and selected columns from the request body
+        file_url = request.data.get('fileUrl')
+        selected_columns = request.data.get('selectedColumns', [])
+
+        if not file_url:
+            return Response({'error': 'File URL is required'}, status=400)
+
+        # Extract only the selected columns from the DataFrame
+        data = download_and_read_file(file_url)
+        
+        if data is None:
+            return Response({'error': 'Failed to read file'}, status=500)
+
+        selected_data = data[selected_columns]
+        
+        return Response({'message': selected_data}, status=200)
+    else:
+        return Response({'error': 'Invalid request method'}, status=405)
+
+def download_and_read_file(file_url):
 
     response = requests.get(file_url)
     
@@ -28,6 +44,6 @@ def download_and_read_file(request):
         else:
             return HttpResponse("Unsupported file format")
         
-        return df.to_json(orient='records')
+        return df
     else:
         return HttpResponse("Failed to download file")
