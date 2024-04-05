@@ -6,6 +6,7 @@ cachetools==5.3.3
 certifi==2024.2.2
 charset-normalizer==3.3.2
 Django==4.2.11
+et-xmlfile==1.1.0
 filelock==3.13.3
 flatbuffers==24.3.25
 fsspec==2024.3.1

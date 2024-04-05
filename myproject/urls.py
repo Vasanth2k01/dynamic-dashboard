@@ -5,5 +5,5 @@ from myproject import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/data/', views.data_submission_view),
+    path('api/url/', views.read_from_url),
 ]
