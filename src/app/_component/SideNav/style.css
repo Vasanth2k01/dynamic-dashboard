@@ -1,0 +1,11 @@
+.sidenav {
+  height: 100vh;
+  max-width: 15.625rem !important;
+  min-width: 15.625rem !important;
+  background-color: #42307d !important;
+  color: #ffffff !important;
+}
+
+.active {
+  background-color: #6941c6 !important;
+}

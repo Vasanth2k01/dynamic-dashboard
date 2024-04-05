@@ -13,7 +13,7 @@ import {
   IServerSideDatasource,
 } from "@ag-grid-community/core";
 import { AgGridReact } from "ag-grid-react";
-import { FakeServer } from "./fakeServer/fakeServer";
+import { FakeServer } from "../fakeServer/fakeServer";
 import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
 import { ServerSideRowModelModule } from "@ag-grid-enterprise/server-side-row-model";
 
