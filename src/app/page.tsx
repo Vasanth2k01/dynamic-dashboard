@@ -18,6 +18,7 @@ import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
 import { ServerSideRowModelModule } from "@ag-grid-enterprise/server-side-row-model";
 
 import { ModuleRegistry } from "@ag-grid-community/core";
+import { useCSVReader } from "react-papaparse";
 ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);
 
 interface IOlympicData {
@@ -36,6 +37,7 @@ interface IOlympicData {
 
 export default function Home() {
   const [gridApi, setGridApi] = useState<GridApi<IOlympicData> | null>(null);
+  const { CSVReader } = useCSVReader();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,16 +64,31 @@ export default function Home() {
     columnDefs: [
       { field: "country", enableRowGroup: true },
       { field: "year", enableRowGroup: true, rowGroup: true, hide: true },
-      { field: "athlete", hide: true },
+      { field: "athlete", enableRowGroup: true, hide: false },
       {
         field: "sport",
         enableRowGroup: true,
         checkboxSelection: true,
         filter: "agTextColumnFilter",
       },
-      { field: "gold", aggFunc: "sum", filter: "agNumberColumnFilter" },
-      { field: "silver", aggFunc: "sum", filter: "agNumberColumnFilter" },
-      { field: "bronze", aggFunc: "sum", filter: "agNumberColumnFilter" },
+      {
+        field: "gold",
+        aggFunc: "sum",
+        enableRowGroup: true,
+        filter: "agNumberColumnFilter",
+      },
+      {
+        field: "silver",
+        aggFunc: "sum",
+        enableRowGroup: true,
+        filter: "agNumberColumnFilter",
+      },
+      {
+        field: "bronze",
+        aggFunc: "sum",
+        enableRowGroup: true,
+        filter: "agNumberColumnFilter",
+      },
     ],
     defaultColDef: {
       floatingFilter: true,
