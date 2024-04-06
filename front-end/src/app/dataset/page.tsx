@@ -58,7 +58,7 @@ export default function DatasetPage() {
 
   useEffect(() => {
     if (csvData.header.length) {
-      const parsedValue: Record<string, any> = JSON.parse(
+      const parsedValue: Record<string, CSVChartType> = JSON.parse(
         localStorage.getItem("csvData") || "{}"
       );
       const nextIndex = Object.keys(parsedValue).length;
@@ -73,10 +73,6 @@ export default function DatasetPage() {
     }
   }, [csvData]);
 
-  const handleClose = () => {
-    setShowModal(false);
-  };
-
   const handleUploadProgress = (progressEvent: ProgressEvent) => {
     const { loaded, total } = progressEvent;
     const percentage = (loaded / total) * 100;
@@ -84,11 +80,9 @@ export default function DatasetPage() {
   };
 
   const handleUploadComplete = () => {
-    // Set upload complete
-    // Redirect after a delay
     setTimeout(() => {
-      window.location.href = "/table"; // Redirect to /table route
-    }, 2000); // 2 seconds delay
+      window.location.href = "/table";
+    }, 2000);
   };
 
   return (
@@ -156,12 +150,7 @@ export default function DatasetPage() {
                   handleUploadComplete();
                 }}
               >
-                {({
-                  getRootProps,
-                  acceptedFile,
-                  ProgressBar,
-                  getRemoveFileProps,
-                }: any) => (
+                {({ getRootProps, ProgressBar }: any) => (
                   <Dropdown.Item
                     className="d-flex align-items-center justify-content-start"
                     eventKey="1"

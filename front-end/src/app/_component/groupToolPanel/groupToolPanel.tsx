@@ -1,4 +1,10 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
+
+/**
+ * <-------------- Import Ends Here -------------->
+ */
 
 const GroupsToolPanel = ({ api }: any) => {
   const [selectedFields, setSelectedFields] = useState<string[]>([]);

@@ -1,12 +1,15 @@
 "use client";
 
+import Image from "next/image";
+
 import React, { useEffect, useState } from "react";
-import { useCSVReader } from "react-papaparse";
+
+import { Button } from "react-bootstrap";
 
 import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
 import { ServerSideRowModelModule } from "@ag-grid-enterprise/server-side-row-model";
 import { ModuleRegistry } from "@ag-grid-community/core";
-import { GridApi, IRowNode } from "ag-grid-community";
+import { GridApi } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
@@ -17,37 +20,22 @@ import { FakeServer } from "@/app/fakeServer/fakeServer";
 import GroupsToolPanel from "@/app/_component/groupToolPanel/groupToolPanel";
 import Groupfields from "@/app/_component/groupFileds/groupfields";
 
+import { CSVChartType, GroupColumnType, IOlympicData } from "@/interface";
+
 import "./styles.css";
-import { CSVChartType } from "@/interface";
-import { Button, ToggleButton } from "react-bootstrap";
-import Image from "next/image";
+
+/**
+ * <-------------- Import Ends Here -------------->
+ */
 
 ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);
 
-export interface IOlympicData {
-  id?: number;
-  athlete: string;
-  age: number;
-  country: string;
-  year: number;
-  date: string;
-  sport: string;
-  gold: number;
-  silver: number;
-  bronze: number;
-  total: number;
-}
-
 export default function Home() {
   const [gridApi, setGridApi] = useState<GridApi<IOlympicData> | null>(null);
-  const [groupedColumns, setGroupedColumns] = useState<
-    { name: string; columns: string[] }[]
-  >([]);
-  const [groupCounter, setGroupCounter] = useState(1);
+  const [groupedColumns, setGroupedColumns] = useState<GroupColumnType[]>([]);
+  const [groupCounter, setGroupCounter] = useState<number>(1);
   const [columns, setColumns] = useState<string[]>([]);
   const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
-
-  const { CSVReader } = useCSVReader();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +80,6 @@ export default function Home() {
   };
 
   const gridOptions: any = {
-    // sideBar: ["columns", "filters", "customSideBar"],
     frameworkComponents: { GroupsToolPanel },
     columnDefs: [
       { field: "country", enableRowGroup: true },
@@ -120,22 +107,8 @@ export default function Home() {
       flex: 1,
       minWidth: 120,
     },
-    // autoGroupColumnDef: {
-    //   field: "athlete",
-    //   flex: 1,
-    //   minWidth: 240,
-    //   cellRendererParams: {
-    //     checkbox: true,
-    //   },
-    // },
-    // rowGroupPanelShow: "always",
     rowModelType: "serverSide",
     rowSelection: "multiple",
-    // isRowSelectable: (rowNode: IRowNode) => {
-    //   return rowNode.data.year > 2004;
-    // },
-    // suppressRowClickSelection: true,
-    // suppressAggFuncInHeader: true,
   };
 
   function getServerSideDatasource(server: FakeServer) {
@@ -170,7 +143,6 @@ export default function Home() {
             onGridReady={(params: any) => {
               setGridApi(params.api);
             }}
-            // sideBar={customSideBar}
           />
         </div>
         {groupedColumns.length ? (
@@ -182,13 +154,17 @@ export default function Home() {
           <div className="head p-3">
             <h3>Dataset Fields</h3>
           </div>
-          <div className="field-list">
+          <div className="field-list overflow-auto">
             {columns?.map((data) => (
               <>
                 <div
                   className="py-1 px-3 d-flex cursor-pointer align-items-center"
                   onClick={() => {
-                    if (selectedColumns.length === 2) return;
+                    if (
+                      !selectedColumns.includes(data) &&
+                      selectedColumns.length === 2
+                    )
+                      return;
                     const formData = selectedColumns.includes(data)
                       ? selectedColumns.filter((col) => col !== data)
                       : [...selectedColumns, data];
@@ -212,9 +188,11 @@ export default function Home() {
               </>
             ))}
           </div>
-          <Button variant="outlined-primary" onClick={handleGroupFields}>
-            Group Selection
-          </Button>
+          <div className="d-flex align-items-center justify-content-center">
+            <Button variant="outlined-secondary" onClick={handleGroupFields}>
+              Group Selection
+            </Button>
+          </div>
         </div>
       </div>
     </div>

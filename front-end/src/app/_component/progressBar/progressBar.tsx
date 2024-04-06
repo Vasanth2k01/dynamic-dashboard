@@ -1,10 +1,12 @@
-import React from "react";
+import { ProgressBarProps } from "@/interface";
 
-interface ProgressBarProps {
-  progressPercentage: number;
-}
+/**
+ * <-------------- Import Ends Here -------------->
+ */
 
-const ProgressBarComp: React.FC<ProgressBarProps> = ({ progressPercentage }) => {
+const ProgressBarComp: React.FC<ProgressBarProps> = ({
+  progressPercentage,
+}) => {
   return (
     <div className="progress-bar-container">
       <div

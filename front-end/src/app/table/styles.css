@@ -30,11 +30,6 @@
   padding: 20px;
 }
 
-/* .ag-theme-quartz {
-  height: calc(100vh - 40px);
-  width: calc(100% - 270px);
-} */
-
 .ag-theme-quartz .ag-root-wrapper {
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
@@ -98,4 +93,15 @@ h1 {
   padding: 8px;
   margin-bottom: 4px;
   border-radius: 4px;
+}
+
+.field-list {
+  max-height: calc(100vh - 180px);
+  min-height: calc(100vh - 180px);
+}
+
+.btn-outlined-secondary {
+  border: 1px solid #6941c6;
+  color: #6941c6;
+  font-size: 14px;
 }
