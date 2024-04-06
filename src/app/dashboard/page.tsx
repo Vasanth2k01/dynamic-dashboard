@@ -1,21 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-
 import { useCSVReader } from "react-papaparse";
-
-import { Button, ButtonGroup, Dropdown, Form, Modal } from "react-bootstrap";
-
+import {
+  Button,
+  ButtonGroup,
+  Dropdown,
+  Modal,
+  ProgressBar,
+} from "react-bootstrap";
 import { toStartLetter } from "@/service";
-
 import "./style.css";
 import { ObjectKeyAny } from "@/interface";
-
-/**
- * <-------------- Import Ends Here -------------->
- */
 
 const UploadButtonTitle = () => (
   <div className="d-flex align-items-center justify-content-between upload-button-title">
@@ -30,12 +27,12 @@ const UploadButtonTitle = () => (
   </div>
 );
 
-export default function DashboardLoadyout() {
+export default function DashboardLayout() {
   const location = window?.location?.pathname.split("/")[1] ?? "";
-
   const { CSVReader } = useCSVReader();
-
-  const [show, setShow] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [progressPercentage, setProgressPercentage] = useState<number>(0);
   const [csvData, setCsvData] = useState<{
     header: string[];
     value: [][];
@@ -51,7 +48,21 @@ export default function DashboardLoadyout() {
   }, [csvData]);
 
   const handleClose = () => {
-    setShow(false);
+    setShowModal(false);
+  };
+
+  const handleUploadProgress = (progressEvent: ProgressEvent) => {
+    const { loaded, total } = progressEvent;
+    const percentage = (loaded / total) * 100;
+    setProgressPercentage(percentage);
+  };
+
+  const handleUploadComplete = () => {
+    // Set upload complete
+    // Redirect after a delay
+    setTimeout(() => {
+      window.location.href = "/table"; // Redirect to /table route
+    }, 2000); // 2 seconds delay
   };
 
   return (
@@ -72,28 +83,28 @@ export default function DashboardLoadyout() {
             </p>
           </div>
 
-          <Dropdown className="dashboard-upload-btn w-100" as={ButtonGroup}>
-            <Button variant="primary">
+          <Dropdown
+            className="dashboard-upload-btn w-100"
+            as={ButtonGroup}
+            show={showDropdown}
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            <Dropdown.Toggle
+              variant="primary"
+              id="dropdown-basic"
+              split
+              className="upload-button"
+            >
               <UploadButtonTitle />
-            </Button>
-
-            <Dropdown.Toggle split variant="primary" id="dropdown-split-basic">
-              <Image
-                width={20}
-                height={20}
-                alt="fi_chevron-down"
-                src={"/fi_chevron-down.svg"}
-              />
             </Dropdown.Toggle>
 
-            <Dropdown.Menu className="dashboard-upload-list">
+            <Dropdown.Menu>
               <CSVReader
+                onUploadProgress={handleUploadProgress}
                 onUploadAccepted={(results: any) => {
-                  console.log("---------------------------");
                   const resultData = results.data.filter((data: unknown[]) =>
                     data.some((value: unknown) => !!value)
                   );
-                  console.log(results, resultData);
                   const headers = resultData[0];
                   resultData.shift();
 
@@ -105,7 +116,6 @@ export default function DashboardLoadyout() {
                           head: string,
                           index: number
                         ) => {
-                          console.log(index, formData, head, data[index]);
                           formData[head] = data[index];
                           return formData;
                         },
@@ -113,25 +123,19 @@ export default function DashboardLoadyout() {
                       );
                     });
                   };
-                  console.log(results, resultData);
                   setCsvData({
                     header: headers,
                     value: formFunction(),
                   });
-                  console.log("---------------------------");
+
+                  setShowModal(true);
+                  handleUploadComplete();
                 }}
               >
-                {({
-                  getRootProps,
-                  acceptedFile,
-                  ProgressBar,
-                  getRemoveFileProps,
-                }: any) => (
+                {({ getRootProps }: any) => (
                   <Dropdown.Item
-                    onClick={() => console.log("upload file")}
-                    className="d-flex align-items-center justify-content-start"
-                    eventKey="1"
                     {...getRootProps()}
+                    className="d-flex align-items-center justify-content-start"
                   >
                     <div>
                       <Image
@@ -143,50 +147,21 @@ export default function DashboardLoadyout() {
                       />
                       Upload File
                     </div>
-                    <ProgressBar />
                   </Dropdown.Item>
                 )}
               </CSVReader>
-              <Dropdown.Item
-                onClick={() => setShow(true)}
-                className="d-flex align-items-center justify-content-start"
-                eventKey="2"
-              >
-                <Image
-                  width={20}
-                  height={20}
-                  className="me-2"
-                  alt="link"
-                  src={"/link.svg"}
-                />
-                Embedded Link
-              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
       </div>
 
-      <Modal show={show}>
-        <Modal.Header>
-          <Modal.Title>Embedded Link</Modal.Title>
+      <Modal show={showModal} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Uploading...</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div>
-            <h4>URL</h4>
-            <Form.Control type="text" placeholder="Enter or paste" />
-          </div>
+          <ProgressBar now={progressPercentage} animated />
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outlined-primary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => console.log("API integrate here")}
-          >
-            Embedded Link
-          </Button>
-        </Modal.Footer>
       </Modal>
     </div>
   );

@@ -5,6 +5,7 @@ body {
 }
 
 body {
+  font-family: "Nunito Sans", sans-serif;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,

@@ -1,27 +1,24 @@
 "use client";
-// page.tsx
-
 import React, { useEffect, useState } from "react";
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
 import "ag-grid-enterprise";
-import {
-  GridOptions,
-  GetRowIdParams,
-  GridApi,
-  IRowNode,
-  IServerSideDatasource,
-} from "@ag-grid-community/core";
 import { AgGridReact } from "ag-grid-react";
 import { FakeServer } from "../fakeServer/fakeServer";
 import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
 import { ServerSideRowModelModule } from "@ag-grid-enterprise/server-side-row-model";
-
 import { ModuleRegistry } from "@ag-grid-community/core";
 import { useCSVReader } from "react-papaparse";
+import GroupsToolPanel from "@/app/_component/groupToolPanel/groupToolPanel";
+import { GridApi, IRowNode } from "ag-grid-community";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import Groupfields from "@/app/_component/groupFileds/groupfields";
+import "./styles.css";
+
 ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);
 
-interface IOlympicData {
+export interface IOlympicData {
   id?: number;
   athlete: string;
   age: number;
@@ -37,6 +34,11 @@ interface IOlympicData {
 
 export default function Home() {
   const [gridApi, setGridApi] = useState<GridApi<IOlympicData> | null>(null);
+  const [groupedColumns, setGroupedColumns] = useState<
+    { name: string; columns: string[] }[]
+  >([]);
+  const [groupCounter, setGroupCounter] = useState(1);
+
   const { CSVReader } = useCSVReader();
 
   useEffect(() => {
@@ -50,8 +52,6 @@ export default function Home() {
       });
       const fakeServer = new FakeServer(data);
       const datasource = getServerSideDatasource(fakeServer);
-      console.log("dataSource", datasource);
-
       if (gridApi) {
         gridApi.setServerSideDatasource(datasource);
       }
@@ -59,8 +59,34 @@ export default function Home() {
     fetchData();
   }, [gridApi]);
 
-  const gridOptions: GridOptions<IOlympicData> = {
-    sideBar: true,
+  // const customSideBar: any = {
+  //   toolPanels: [
+  //     {
+  //       id: "columns",
+  //       labelDefault: "Columns",
+  //       labelKey: "columns",
+  //       iconKey: "columns",
+  //       toolPanel: "agColumnsToolPanel",
+  //       sideBarDisplayPriority: 0,
+  //     },
+  //   ],
+  // };
+
+  const handleGroupFields = () => {
+    const selectedColumns = gridApi
+      ?.getColumnState()
+      .filter((col) => col.rowGroup);
+    if (selectedColumns && selectedColumns.length > 0) {
+      const groupName = `Group ${groupCounter}`;
+      const columns = selectedColumns.map((col: any) => col.colId);
+      setGroupedColumns([...groupedColumns, { name: groupName, columns }]);
+      setGroupCounter(groupCounter + 1);
+    }
+  };
+
+  const gridOptions: any = {
+    sideBar: ["columns", "filters", "customSideBar"],
+    frameworkComponents: { GroupsToolPanel },
     columnDefs: [
       { field: "country", enableRowGroup: true },
       { field: "year", enableRowGroup: true, rowGroup: true, hide: true },
@@ -133,13 +159,23 @@ export default function Home() {
   }
 
   return (
-    <div className="ag-theme-quartz" style={{ height: "100vh", width: "100%" }}>
-      <AgGridReact
-        gridOptions={gridOptions as any}
-        onGridReady={(params: any) => {
-          setGridApi(params.api);
-        }}
-      ></AgGridReact>
+    <div
+      className="ag-theme-quartz"
+      style={{ display: "flex", height: "100vh", width: "100%" }}
+    >
+      <div style={{ flex: 1 }}>
+        <Groupfields groupedColumns={groupedColumns} />
+        <button onClick={handleGroupFields} className="button">
+          Group Fields
+        </button>
+        <AgGridReact
+          gridOptions={gridOptions as any}
+          onGridReady={(params: any) => {
+            setGridApi(params.api);
+          }}
+          // sideBar={customSideBar}
+        />
+      </div>
     </div>
   );
 }
