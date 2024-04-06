@@ -21,13 +21,13 @@ const SideNav = () => {
     <div className="sidenav">
       <div className="p-2 d-flex align-items-center">
         <Image
-          width={16}
-          height={16}
+          width={20}
+          height={20}
           alt="logo"
           className="me-2"
-          src={"/logo.png"}
+          src={"/Logo.png"}
         />
-        UntitiledUI
+        AIQUARIUS
       </div>
       <div className="p-2">
         <div

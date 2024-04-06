@@ -56,3 +56,46 @@ h1 {
   text-align: center;
   margin-bottom: 40px;
 }
+
+.field,
+.group {
+  min-width: 260px;
+  max-width: 260px;
+  border: 1px solid #eaecf0;
+}
+
+.head {
+  max-height: 3.75rem !important;
+  min-height: 3.75rem !important;
+  border-bottom: 1px solid #eaecf0 !important;
+}
+
+.field .head {
+  border-bottom: none !important;
+}
+
+.field h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.group .head {
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: none !important;
+}
+
+.group-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.group-column {
+  border: 1px solid #eaecf0 !important;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+}

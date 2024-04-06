@@ -200,8 +200,8 @@ export default function DatasetPage() {
         </div>
       </div>
 
-      <Modal show={showModal} onHide={handleClose} centered>
-        <Modal.Header closeButton>
+      <Modal show={showModal} centered>
+        <Modal.Header>
           <Modal.Title>Uploading...</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -209,7 +209,7 @@ export default function DatasetPage() {
         </Modal.Body>
       </Modal>
 
-      <Modal show={show}>
+      <Modal show={show} centered>
         <Modal.Header>
           <Modal.Title>Embedded Link</Modal.Title>
         </Modal.Header>
@@ -220,7 +220,7 @@ export default function DatasetPage() {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outlined-primary" onClick={handleClose}>
+          <Button variant="outlined-primary" onClick={() => setShow(false)}>
             Cancel
           </Button>
           <Button

@@ -18,6 +18,9 @@ import GroupsToolPanel from "@/app/_component/groupToolPanel/groupToolPanel";
 import Groupfields from "@/app/_component/groupFileds/groupfields";
 
 import "./styles.css";
+import { CSVChartType } from "@/interface";
+import { Button, ToggleButton } from "react-bootstrap";
+import Image from "next/image";
 
 ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);
 
@@ -41,6 +44,8 @@ export default function Home() {
     { name: string; columns: string[] }[]
   >([]);
   const [groupCounter, setGroupCounter] = useState(1);
+  const [columns, setColumns] = useState<string[]>([]);
+  const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
 
   const { CSVReader } = useCSVReader();
 
@@ -62,61 +67,52 @@ export default function Home() {
     fetchData();
   }, [gridApi]);
 
-  // const customSideBar: any = {
-  //   toolPanels: [
-  //     {
-  //       id: "columns",
-  //       labelDefault: "Columns",
-  //       labelKey: "columns",
-  //       iconKey: "columns",
-  //       toolPanel: "agColumnsToolPanel",
-  //       sideBarDisplayPriority: 0,
-  //     },
-  //   ],
-  // };
+  useEffect(() => {
+    const parsedValue: Record<string, CSVChartType> = JSON.parse(
+      localStorage.getItem("csvData") || "{}"
+    );
+
+    if (Object.keys(parsedValue).length) {
+      const { header } = parsedValue["0"];
+
+      setColumns(header);
+    }
+  }, []);
 
   const handleGroupFields = () => {
-    const selectedColumns = gridApi
-      ?.getColumnState()
-      .filter((col) => col.rowGroup);
-    if (selectedColumns && selectedColumns.length > 0) {
+    if (selectedColumns.length) {
       const groupName = `Group ${groupCounter}`;
-      const columns = selectedColumns.map((col: any) => col.colId);
-      setGroupedColumns([...groupedColumns, { name: groupName, columns }]);
+      setGroupedColumns([
+        ...groupedColumns,
+        { name: groupName, columns: selectedColumns },
+      ]);
       setGroupCounter(groupCounter + 1);
+      setSelectedColumns([]);
     }
   };
 
   const gridOptions: any = {
-    sideBar: ["columns", "filters", "customSideBar"],
+    // sideBar: ["columns", "filters", "customSideBar"],
     frameworkComponents: { GroupsToolPanel },
     columnDefs: [
       { field: "country", enableRowGroup: true },
-      { field: "year", enableRowGroup: true, rowGroup: true, hide: true },
-      { field: "athlete", enableRowGroup: true, hide: false },
+      { field: "year", enableRowGroup: true },
+      { field: "athlete", enableRowGroup: true },
       {
         field: "sport",
         enableRowGroup: true,
-        checkboxSelection: true,
-        filter: "agTextColumnFilter",
       },
       {
         field: "gold",
-        aggFunc: "sum",
         enableRowGroup: true,
-        filter: "agNumberColumnFilter",
       },
       {
         field: "silver",
-        aggFunc: "sum",
         enableRowGroup: true,
-        filter: "agNumberColumnFilter",
       },
       {
         field: "bronze",
-        aggFunc: "sum",
         enableRowGroup: true,
-        filter: "agNumberColumnFilter",
       },
     ],
     defaultColDef: {
@@ -124,22 +120,22 @@ export default function Home() {
       flex: 1,
       minWidth: 120,
     },
-    autoGroupColumnDef: {
-      field: "athlete",
-      flex: 1,
-      minWidth: 240,
-      cellRendererParams: {
-        checkbox: true,
-      },
-    },
-    rowGroupPanelShow: "always",
+    // autoGroupColumnDef: {
+    //   field: "athlete",
+    //   flex: 1,
+    //   minWidth: 240,
+    //   cellRendererParams: {
+    //     checkbox: true,
+    //   },
+    // },
+    // rowGroupPanelShow: "always",
     rowModelType: "serverSide",
     rowSelection: "multiple",
-    isRowSelectable: (rowNode: IRowNode) => {
-      return rowNode.data.year > 2004;
-    },
-    suppressRowClickSelection: true,
-    suppressAggFuncInHeader: true,
+    // isRowSelectable: (rowNode: IRowNode) => {
+    //   return rowNode.data.year > 2004;
+    // },
+    // suppressRowClickSelection: true,
+    // suppressAggFuncInHeader: true,
   };
 
   function getServerSideDatasource(server: FakeServer) {
@@ -164,20 +160,62 @@ export default function Home() {
   return (
     <div
       className="ag-theme-quartz"
-      style={{ display: "flex", height: "100vh", width: "100%" }}
+      style={{ height: "100vh", width: "100%", backgroundColor: "white" }}
     >
-      <div style={{ flex: 1 }}>
-        <Groupfields groupedColumns={groupedColumns} />
-        <button onClick={handleGroupFields} className="button">
-          Group Fields
-        </button>
-        <AgGridReact
-          gridOptions={gridOptions as any}
-          onGridReady={(params: any) => {
-            setGridApi(params.api);
-          }}
-          // sideBar={customSideBar}
-        />
+      <div className="head p-3">Dataset</div>
+      <div className="d-flex w-100" style={{ height: "calc(100vh - 60px)" }}>
+        <div className="w-100 pt-2">
+          <AgGridReact
+            gridOptions={gridOptions as any}
+            onGridReady={(params: any) => {
+              setGridApi(params.api);
+            }}
+            // sideBar={customSideBar}
+          />
+        </div>
+        {groupedColumns.length ? (
+          <Groupfields groupedColumns={groupedColumns} />
+        ) : (
+          <></>
+        )}
+        <div className="field">
+          <div className="head p-3">
+            <h3>Dataset Fields</h3>
+          </div>
+          <div className="field-list">
+            {columns?.map((data) => (
+              <>
+                <div
+                  className="py-1 px-3 d-flex cursor-pointer align-items-center"
+                  onClick={() => {
+                    if (selectedColumns.length === 2) return;
+                    const formData = selectedColumns.includes(data)
+                      ? selectedColumns.filter((col) => col !== data)
+                      : [...selectedColumns, data];
+
+                    setSelectedColumns(formData);
+                  }}
+                >
+                  <Image
+                    width={14}
+                    height={14}
+                    className="me-2"
+                    src={
+                      selectedColumns.includes(data)
+                        ? "/check_box_select.png"
+                        : "/check_box_outline.png"
+                    }
+                    alt="checkbox"
+                  />
+                  <div>{data}</div>
+                </div>
+              </>
+            ))}
+          </div>
+          <Button variant="outlined-primary" onClick={handleGroupFields}>
+            Group Selection
+          </Button>
+        </div>
       </div>
     </div>
   );
