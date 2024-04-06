@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 import { AgChartOptions } from "ag-grid-enterprise";
 
-import { toStartLetter } from "@/service";
+import { toStartLetter } from "../../service";
 
-import { CSVChartType } from "@/interface";
+import { CSVChartType } from "../../interface";
 
 import { Chart } from "../_component/chart";
 

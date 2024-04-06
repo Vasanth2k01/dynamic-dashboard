@@ -9,9 +9,9 @@ import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
 import { ServerSideRowModelModule } from "@ag-grid-enterprise/server-side-row-model";
 import { ModuleRegistry } from "@ag-grid-community/core";
 import { useCSVReader } from "react-papaparse";
-import GroupsToolPanel from "@/app/_component/groupToolPanel/groupToolPanel";
+import GroupsToolPanel from "../_component/groupToolPanel/groupToolPanel";
 import { GridApi, IRowNode } from "ag-grid-community";
-import Groupfields from "@/app/_component/groupFileds/groupfields";
+import Groupfields from "../_component/groupFileds/groupfields";
 import "./styles.css";
 
 ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);
