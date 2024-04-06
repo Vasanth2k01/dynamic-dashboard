@@ -1,17 +1,22 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
-import "@ag-grid-community/styles/ag-grid.css";
-import "@ag-grid-community/styles/ag-theme-quartz.css";
-import "ag-grid-enterprise";
-import { AgGridReact } from "ag-grid-react";
-import { FakeServer } from "../fakeServer/fakeServer";
+import { useCSVReader } from "react-papaparse";
+
 import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
 import { ServerSideRowModelModule } from "@ag-grid-enterprise/server-side-row-model";
 import { ModuleRegistry } from "@ag-grid-community/core";
-import { useCSVReader } from "react-papaparse";
-import GroupsToolPanel from "../_component/groupToolPanel/groupToolPanel";
 import { GridApi, IRowNode } from "ag-grid-community";
-import Groupfields from "../_component/groupFileds/groupfields";
+import { AgGridReact } from "ag-grid-react";
+import "@ag-grid-community/styles/ag-grid.css";
+import "@ag-grid-community/styles/ag-theme-quartz.css";
+import "ag-grid-enterprise";
+
+import { FakeServer } from "@/app/fakeServer/fakeServer";
+
+import GroupsToolPanel from "@/app/_component/groupToolPanel/groupToolPanel";
+import Groupfields from "@/app/_component/groupFileds/groupfields";
+
 import "./styles.css";
 
 ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);

@@ -15,9 +15,9 @@ import {
   ProgressBar,
 } from "react-bootstrap";
 
-import { toStartLetter } from "../../service";
+import { toStartLetter } from "@/service";
 
-import { CSVChartType, ObjectKeyAny } from "../../interface";
+import { CSVChartType, ObjectKeyAny } from "@/interface";
 
 import "./style.css";
 

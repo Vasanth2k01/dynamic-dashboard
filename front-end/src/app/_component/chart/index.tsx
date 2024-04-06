@@ -1,10 +1,12 @@
+import Image from "next/image";
+import { useState } from "react";
+
 import { AgChartsReact } from "ag-charts-react";
 import { AgChartOptions } from "ag-grid-enterprise";
 
-import "./style.css";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
-import Image from "next/image";
-import { useState } from "react";
+
+import "./style.css";
 
 /**
  * <-------------- Import Ends Here -------------->
