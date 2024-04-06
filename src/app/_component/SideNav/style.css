@@ -9,3 +9,7 @@
 .active {
   background-color: #6941c6 !important;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

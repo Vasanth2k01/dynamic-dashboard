@@ -11,8 +11,6 @@ import { ModuleRegistry } from "@ag-grid-community/core";
 import { useCSVReader } from "react-papaparse";
 import GroupsToolPanel from "@/app/_component/groupToolPanel/groupToolPanel";
 import { GridApi, IRowNode } from "ag-grid-community";
-import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
 import Groupfields from "@/app/_component/groupFileds/groupfields";
 import "./styles.css";
 

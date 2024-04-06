@@ -1,0 +1,69 @@
+.chart-display {
+  width: 560px;
+  height: 360px;
+  padding: 10px;
+  background-color: #f9f5ff;
+}
+
+.chart-outlayer {
+  background-color: white;
+}
+
+.chart-head {
+  height: 58px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-head h3 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ag-chart-wrapper {
+  width: 520px !important;
+  height: 282px !important;
+}
+
+.btn-primary {
+  background-color: #6941c6 !important;
+  border-color: #6941c6 !important;
+}
+
+.dropdown-toggle::after {
+  visibility: hidden;
+}
+
+.dashboard-upload-btn {
+  width: 94px !important;
+  height: 30px !important;
+  background-color: #6941c6 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.dashboard-upload-btn p {
+  margin: 0;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.dashboard-upload-btn button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.dashboard-upload-btn button::after {
+  display: none;
+}
+
+.ai-in {
+  background-color: #f4ebff;
+  border-radius: 8px;
+  color: #7f56d9;
+  font-size: 14px;
+  font-weight: 500;
+}
